@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role{
+  USER
+  ADMIN
+}
+
+model User{
+  id Int @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model Genre{
+  id Int @id @default(autoincrement())
+  name String
+  comics Comic[] 
+}
+
+model Comic{
+  id Int @id @default(autoincrement())
+  name String @unique
+  desription String
+  genre Genre @relation(fields: [genreId], references: [id])
+  genreId Int
+  panels Panel[]
+}
+
+model Panel{
+  id Int @id @default(autoincrement())
+  image String
+  comic Comic @relation(fields: [comicId], references: [id]) 
+  comicId Int 
+}
