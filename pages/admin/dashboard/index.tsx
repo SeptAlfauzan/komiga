@@ -1,7 +1,9 @@
+import { getCookie } from "cookies-next";
 import { NextPage } from "next";
 import React from "react";
 
 const Dashboard: NextPage = () => {
+  console.log(getCookie("tokenAuth"));
   return (
     <div className="h-screen w-full bg-zinc-50 flex flex-row">
       <div className="md:w-1/4 h-full bg-white flex flex-col items-center py-10 px-10">

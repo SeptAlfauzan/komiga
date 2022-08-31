@@ -1,5 +1,6 @@
 import { User } from "@prisma/client";
 import axios from "axios";
+import { setCookie } from "cookies-next";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { HTMLAttributes } from "react";
@@ -18,8 +19,8 @@ const Auth: NextPage = () => {
   const onSubmit = async (data: User) => {
     try {
       const response = await axios.post("/api/auth", data);
-      setFailed(response.data);
-      response.data && router.push("/admin/dashboard");
+      setCookie("tokenAuth", response.data);
+      router.push("/admin/dashboard");
     } catch (error) {
       console.log(error);
       setFailed(false);
