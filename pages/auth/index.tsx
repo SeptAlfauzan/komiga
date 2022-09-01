@@ -19,6 +19,7 @@ const Auth: NextPage = () => {
   const onSubmit = async (data: User) => {
     try {
       const response = await axios.post("/api/auth", data);
+      console.log(response.data);
       setCookie("tokenAuth", response.data);
       router.push("/admin/dashboard");
     } catch (error) {

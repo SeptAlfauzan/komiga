@@ -1,49 +1,23 @@
 import { getCookie } from "cookies-next";
 import { NextPage } from "next";
 import React from "react";
+import SideBar from "../../../components/dashboard/Sidebar";
+import { useAuth } from "../../../feature/auth/hook/useAuth";
 
 const Dashboard: NextPage = () => {
-  console.log(getCookie("tokenAuth"));
+  const { auth, logout } = useAuth();
+
+  React.useEffect(() => {
+    const check = async () => {
+      const token = getCookie("tokenAuth");
+      await auth(token?.toString() || "");
+    };
+    check();
+  }, []);
+
   return (
     <div className="h-screen w-full bg-zinc-50 flex flex-row">
-      <div className="md:w-1/4 h-full bg-white flex flex-col items-center py-10 px-10">
-        {/* name section */}
-        <>
-          <div className="w-20 h-20 rounded-full bg-zinc-200 relative">
-            <div className="bg-green-400 border-2 border-white w-3 h-3 rounded-full absolute bottom-0 right-[14%]" />
-          </div>
-          <h3 className="text-black font-bold text-lg">Admin</h3>
-          <h5 className="text-zinc-300">Admin name</h5>
-        </>
-        {/* menu */}
-        <ul className="w-full border-t-2 border-r-zinc-400 pt-10 mt-10 flex flex-col gap-4">
-          <li
-            className={`bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full text-white`}
-          >
-            Dashboard
-          </li>
-          <li
-            className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-          >
-            Komik
-          </li>
-          <li
-            className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-          >
-            Genre
-          </li>
-          <li
-            className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-          >
-            Admin
-          </li>
-          <li
-            className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-          >
-            Logout
-          </li>
-        </ul>
-      </div>
+      <SideBar />
       <div className="md:w-3/4 h-fit overflow-y-scroll flex flex-wrap px-[100px] py-10 gap-10 items-center">
         <Card />
         <Card />
