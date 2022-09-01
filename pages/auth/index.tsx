@@ -62,7 +62,7 @@ const Auth: NextPage = () => {
               <input
                 {...register("username")}
                 type="text"
-                className="bg-yellow-50 border border-orange-400 rounded-full py-1 px-2"
+                className="bg-yellow-50 border border-orange-400 rounded-full py-1 px-5"
               />
             </div>
             <div className="flex flex-col">
@@ -70,7 +70,7 @@ const Auth: NextPage = () => {
               <input
                 {...register("password")}
                 type="password"
-                className="bg-yellow-50 border border-orange-400 rounded-full py-1 px-2"
+                className="bg-yellow-50 border border-orange-400 rounded-full py-1 px-5"
               />
             </div>
             <button

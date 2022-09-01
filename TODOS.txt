@@ -1,0 +1,20 @@
+user authentication ✅
+comic file upload:
+    upload panels
+    upload description
+
+genre CRUD:
+    create
+    read
+    update
+    delete
+
+comic file delete
+comic file update
+
+responsive layout:
+    dashboard admin
+    auth
+    homepage
+    detail page
+    panels page

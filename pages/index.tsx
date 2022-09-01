@@ -1,24 +1,16 @@
 import type { NextPage } from "next";
-import LinkNav from "../components/navbar/Link";
 import MainLayout from "../components/layouts/MainLayout";
 import Image from "next/image";
 import CardThumbnail from "../components/CardThumbnail";
+import NavBar from "../components/navbar";
 
 const Home: NextPage = () => {
   return (
     <MainLayout>
-      <nav className="fixed left-0 z-10 flex gap-3 md:flex-row  flex-col w-full bg-white justify-end px-[169px] py-5">
-        <LinkNav
-          text="KOMIGA"
-          href=""
-          className="text-yellow-300 font-bold mr-auto"
-        />
-        <LinkNav text="Masuk" href="" />
-        <LinkNav text="Buat Akun" href="" />
-      </nav>
-      <section className="h-screen flex w-full pt-[170px] px-[169px]">
-        <div className="w-1/2 h-full flex flex-col gap-[30px]">
-          <h3 className="text-4xl font-semibold leading-relaxed">
+      <NavBar />
+      <section className="h-screen flex w-full pt-[100px] md:pt-[170px] px-[50px] md:px-[169px]">
+        <div className="w-full md:w-1/2 h-full flex flex-col gap-[30px]">
+          <h3 className="text-3xl md:text-4xl font-semibold leading-relaxed">
             KOMIGA, media pembelajaran pengenalan bencana
           </h3>
           <p className="text-lg font-light">
@@ -28,11 +20,11 @@ const Home: NextPage = () => {
             Mulai Baca
           </button>
         </div>
-        <div className="w-1/2 h-full">
+        <div className="w-0 md:w-1/2 h-full">
           <Banner />
         </div>
       </section>
-      <section className="h-screen flex flex-col w-full  bg-yellow-300 px-[169px] py-[100px]">
+      <section className="h-screen flex flex-col w-full  bg-yellow-300 px-[50px] md:px-[169px] py-[100px]">
         <h3 className="text-4xl mb-10">Daftar Komik</h3>
         <div className="flex w-full flex-wrap justify-between">
           {new Array(4).fill(null).map((data, i) => (

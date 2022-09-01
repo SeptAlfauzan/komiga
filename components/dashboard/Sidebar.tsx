@@ -3,11 +3,20 @@ import { useAppSelector } from "../../app/hooks";
 
 import { IoMenuOutline } from "react-icons/io5";
 import { useAuth } from "../../feature/auth/hook/useAuth";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const SideBar: React.FC = () => {
   const admin = useAppSelector((state) => state.auth.value);
   const [minimize, setMinimize] = React.useState<boolean>(true);
+  const [active, setActive] = React.useState<string>("");
   const { logout } = useAuth();
+
+  const router = useRouter();
+
+  React.useEffect(() => {
+    setActive(router.route.split("/")[2]);
+  }, [router.route]);
 
   return (
     <nav
@@ -35,21 +44,9 @@ const SideBar: React.FC = () => {
       </>
       {/* menu */}
       <ul className="w-full border-t-2 border-r-zinc-400 pt-10 mt-10 flex flex-col gap-4">
-        <li
-          className={`bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full text-white`}
-        >
-          Dashboard
-        </li>
-        <li
-          className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-        >
-          Komik
-        </li>
-        <li
-          className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
-        >
-          Genre
-        </li>
+        <SideBarLink name="dashboard" active={active} href="/admin/dashboard" />
+        <SideBarLink name="komik" active={active} href="/admin/komik" />
+        <SideBarLink name="genre" active={active} href="/admin/genre" />
         <li
           className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
         >
@@ -63,6 +60,28 @@ const SideBar: React.FC = () => {
         </li>
       </ul>
     </nav>
+  );
+};
+
+interface SideBarLinkProps extends React.HTMLAttributes<HTMLAnchorElement> {
+  href: string;
+  name: string;
+  active: string;
+}
+
+const SideBarLink: React.FC<SideBarLinkProps> = (props) => {
+  return (
+    <Link href={props.href}>
+      <li
+        className={` ${
+          props.active === props.name
+            ? "bg-gradient-to-br from-yellow-300 to-pink-500 text-white"
+            : "bg-white text-black"
+        } hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white duration-250 transition-all cursor-pointer capitalize`}
+      >
+        {props.name}
+      </li>
+    </Link>
   );
 };
 

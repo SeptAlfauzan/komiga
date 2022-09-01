@@ -16,11 +16,8 @@ const MainLayout: React.FC<Props> = ({ children }) => {
 
       <main className="bg-[#F6F6F6]">{children}</main>
 
-      <footer>
-        Powered by{" "}
-        <span>
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </span>
+      <footer className="bg-zinc-800 text-white text-center py-10">
+        Powered by
       </footer>
     </div>
   );
