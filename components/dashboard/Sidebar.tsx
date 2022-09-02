@@ -22,7 +22,7 @@ const SideBar: React.FC = () => {
     <nav
       className={` fixed md:relative ${
         minimize ? "translate-x-0" : "-translate-x-full"
-      } md:translate-x-0 duration-300 transition-all md:w-1/4 h-full bg-white flex flex-col items-center py-10 px-10`}
+      } md:translate-x-0 duration-300 transition-all md:w-1/4 h-full bg-white flex flex-col items-center py-10 px-10 z-10 shadow-lg md:shadow-none`}
     >
       <button
         className={`absolute md:hidden p-2 bg-white rounded z-10 top-5 ${

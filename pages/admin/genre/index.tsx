@@ -56,12 +56,12 @@ export const getStaticProps = async () => {
   };
 };
 
-function Comic({ rawData }: InferGetStaticPropsType<typeof getStaticProps>) {
+function Genre({ rawData }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <DashboardLayout>
       <div className="w-full h-fit flex flex-wrap gap-10">
         <Table
-          title="Komik"
+          title="Genre"
           data={rawData}
           columns={columns}
           pagination
@@ -72,4 +72,4 @@ function Comic({ rawData }: InferGetStaticPropsType<typeof getStaticProps>) {
   );
 }
 
-export default Comic;
+export default Genre;

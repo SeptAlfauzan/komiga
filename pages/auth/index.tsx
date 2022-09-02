@@ -2,9 +2,11 @@ import { User } from "@prisma/client";
 import axios from "axios";
 import { setCookie } from "cookies-next";
 import { NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { HTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
+import { AiOutlineLoading, AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const Auth: NextPage = () => {
   const {
@@ -14,9 +16,11 @@ const Auth: NextPage = () => {
     formState: { errors },
   } = useForm<User>();
   const [failed, setFailed] = React.useState<boolean>(true);
+  const [loading, setLoading] = React.useState<boolean>(false);
 
   const router = useRouter();
   const onSubmit = async (data: User) => {
+    setLoading(true);
     try {
       const response = await axios.post("/api/auth", data);
       console.log(response.data);
@@ -26,6 +30,7 @@ const Auth: NextPage = () => {
       console.log(error);
       setFailed(false);
     }
+    setLoading(false);
   };
   return (
     <div className="w-full h-screen flex">
@@ -75,9 +80,22 @@ const Auth: NextPage = () => {
             </div>
             <button
               type="submit"
-              className="bg-blue-600 text-white rounded-full px-8 py-1 w-fit"
+              className="bg-blue-600 text-white rounded-full px-8 py-1 w-fit relative"
             >
-              Sign In
+              {loading ? (
+                <div className="flex gap-3 flex-row">
+                  Logging
+                  <Image
+                    className="animate-spin"
+                    src={"/assets/images/Rolling-1s-200px.svg"}
+                    width={"15px"}
+                    height={"15px"}
+                    alt="loader"
+                  />
+                </div>
+              ) : (
+                "Sign In"
+              )}
             </button>
           </form>
         </div>

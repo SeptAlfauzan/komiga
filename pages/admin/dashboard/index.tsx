@@ -1,8 +1,50 @@
-import { NextPage } from "next";
+import { NextPage, InferGetStaticPropsType } from "next";
 import React from "react";
+import { TableColumn } from "react-data-table-component";
 import DashboardLayout from "../../../components/layouts/DashboardLayout";
+import { DataRow } from "../../../constants/interface";
+import Table from "../../../feature/datatable/components/Table";
 
-const Dashboard: NextPage = () => {
+const columns: TableColumn<DataRow>[] = [
+  {
+    name: "Title",
+    selector: (row: any) => row.title,
+    sortable: true,
+  },
+  {
+    name: "Year",
+    selector: (row: any) => row.year,
+  },
+];
+
+export const getStaticProps = async () => {
+  const rawData: DataRow[] = [
+    {
+      key: 1,
+      title: "Beetlejuice",
+      year: "1988",
+    },
+    {
+      key: 2,
+      title: "Ghostbusters",
+      year: "1984",
+    },
+    {
+      key: 2,
+      title: "Ghostbusters",
+      year: "1984",
+    },
+  ];
+  return {
+    props: {
+      rawData,
+    }, // will be passed to the page component as props
+  };
+};
+
+function Dashboard({
+  rawData,
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <DashboardLayout>
       <div className="h-fit flex flex-wrap gap-10">
@@ -10,9 +52,18 @@ const Dashboard: NextPage = () => {
         <Card />
         <Card />
       </div>
+      <>
+        <Table
+          title="Admin Log"
+          data={rawData}
+          columns={columns}
+          pagination
+          subHeader
+        />
+      </>
     </DashboardLayout>
   );
-};
+}
 
 const Card: React.FC = () => {
   return (
