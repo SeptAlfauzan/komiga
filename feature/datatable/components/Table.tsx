@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import DataTable, { TableColumn, TableProps } from "react-data-table-component";
+import { IoCloseCircleOutline } from "react-icons/io5";
 import { useFilter } from "../hooks/useFilter";
 
 interface Table extends TableProps<any> {
@@ -32,7 +33,9 @@ const Table: React.FC<Table> = (props) => {
   }, [filterText, resetPaginationToggle]);
 
   return (
-    <DataTable {...rest} data={result} subHeaderComponent={subHeaderComp} />
+    <div className="w-full border relative overflow-x-scroll">
+      <DataTable {...rest} data={result} subHeaderComponent={subHeaderComp} />
+    </div>
   );
 };
 
@@ -50,15 +53,22 @@ const FilterComponent: React.FC<SearchProps> = ({
   filterText,
 }) => {
   return (
-    <div className="flex gap-3 items-end w-full">
+    <div className="flex flex-col md:flex-row gap-3 items-end w-full py-5">
       <h3 className="mr-auto font-bold">{title}</h3>
-      <label className="text-zinc-300">Search Data</label>
-      <input
-        type="text"
-        className="border rounded-full px-8 py-0.5"
-        onChange={onFilter}
-      />
-      <button onClick={onClear}>clear</button>
+      <div className="relative w-fit h-fit">
+        <input
+          placeholder="Cari data"
+          type="text"
+          className="border rounded-full px-8 py-0.5 w-full"
+          onChange={onFilter}
+        />
+        <button
+          className=" text-zinc-400 absolute right-5 h-full hover:text-zinc-900 hover:scale-125 z-10"
+          onClick={onClear}
+        >
+          <IoCloseCircleOutline />
+        </button>
+      </div>
     </div>
   );
 };

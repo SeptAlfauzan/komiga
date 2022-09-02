@@ -67,7 +67,7 @@ function Dashboard({
 
 const Card: React.FC = () => {
   return (
-    <div className="md:w-[300px] h-fit py-5 rounded-lg bg-gradient-to-br from-yellow-300 to-pink-500 text-white flex flex-col px-10">
+    <div className="w-full md:w-[300px] h-fit py-5 rounded-lg bg-gradient-to-br from-yellow-300 to-pink-500 text-white flex flex-col px-10 hover:scale-105 transition-all cursor-pointer">
       <h3 className="text-3xl">Title</h3>
       <h5 className="font-bold text-5xl self-end">10000</h5>
     </div>
