@@ -14,3 +14,12 @@ Content-Type: application/json
     "username": "admin",
     "password": "qweradmin"
 }
+###
+POST http://localhost:3000/api/comics 
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "description": "qweradmin",
+    "genreId": 1
+}

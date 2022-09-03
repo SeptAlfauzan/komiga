@@ -12,11 +12,9 @@ export async function middleware(request: NextRequest) {
     case "admin":
       try {
         const cookieToken = request.cookies.get("tokenAuth");
-        console.log(cookieToken);
         const payload = await validateToken(cookieToken!);
         // if(typeof payload.username !== "string" || typeof payload.username !== "string") return NextResponse.redirect(`${origin}/auth`);
 
-        console.log("payload", `${payload.username}`, `${payload.password}`);
         return NextResponse.next();
       } catch (error) {
         console.log(error);

@@ -2,11 +2,10 @@ import { User } from "@prisma/client";
 import axios from "axios";
 import { setCookie } from "cookies-next";
 import { NextPage } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { HTMLAttributes } from "react";
 import { useForm } from "react-hook-form";
-import { AiOutlineLoading, AiOutlineLoading3Quarters } from "react-icons/ai";
+import Spinner from "../../components/Spinner";
 
 const Auth: NextPage = () => {
   const {
@@ -23,7 +22,6 @@ const Auth: NextPage = () => {
     setLoading(true);
     try {
       const response = await axios.post("/api/auth", data);
-      console.log(response.data);
       setCookie("tokenAuth", response.data);
       router.push("/admin/dashboard");
     } catch (error) {
@@ -85,13 +83,7 @@ const Auth: NextPage = () => {
               {loading ? (
                 <div className="flex gap-3 flex-row">
                   Logging
-                  <Image
-                    className="animate-spin"
-                    src={"/assets/images/Rolling-1s-200px.svg"}
-                    width={"15px"}
-                    height={"15px"}
-                    alt="loader"
-                  />
+                  <Spinner />
                 </div>
               ) : (
                 "Sign In"

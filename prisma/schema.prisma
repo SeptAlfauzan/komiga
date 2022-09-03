@@ -30,7 +30,7 @@ model Genre{
 model Comic{
   id Int @id @default(autoincrement())
   name String @unique
-  desription String
+  description String
   genre Genre @relation(fields: [genreId], references: [id])
   genreId Int
   panels Panel[]
