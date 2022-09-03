@@ -21,7 +21,11 @@ export default async function handler(
       const validate = await compareHash(password, user?.password!);
       if (!validate) return res.status(500).json(validate);
 
-      const token = await generateToken(user);
+      const token = await generateToken({
+        username: user?.username,
+        password: user?.password,
+      });
+
       setCookie("tokenAuth", token, { req, res });
       return res.status(200).json(token);
       break;

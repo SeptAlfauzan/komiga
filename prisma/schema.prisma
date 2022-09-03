@@ -5,8 +5,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// datasource db {
+//   provider = "mysql"
+//   url      = env("DATABASE_URL")
+// }
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -16,29 +20,37 @@ enum Role{
 }
 
 model User{
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   username String @unique
   password String
 }
 
 model Genre{
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String
   comics Comic[] 
 }
 
 model Comic{
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   name String @unique
   description String
   genre Genre @relation(fields: [genreId], references: [id])
-  genreId Int
+  genreId String
+  episodes Episode[]
+}
+
+model Episode{
+  id String @id @default(uuid())
+  created DateTime @default(now())
+  comic Comic @relation(fields: [comicId], references: [id]) 
+  comicId String 
   panels Panel[]
 }
 
 model Panel{
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   image String
-  comic Comic @relation(fields: [comicId], references: [id]) 
-  comicId Int 
+  episode Episode @relation(fields: [episodeId], references: [id]) 
+  episodeId String 
 }

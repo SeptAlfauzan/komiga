@@ -12,6 +12,7 @@
     "@prisma/client": "^4.2.1",
     "@reduxjs/toolkit": "^1.8.5",
     "@types/bcrypt": "^5.0.0",
+    "@types/uuid": "^8.3.4",
     "ag-grid-community": "^28.1.1",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",

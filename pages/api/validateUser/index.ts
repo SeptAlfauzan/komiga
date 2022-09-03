@@ -6,7 +6,7 @@ import { genHash } from "../../../feature/auth/libs/auth";
 const prisma = new PrismaClient();
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<User>
+  res: NextApiResponse<User | string>
 ) {
   switch (req.method) {
     case "POST":

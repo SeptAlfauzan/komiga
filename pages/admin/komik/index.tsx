@@ -12,6 +12,7 @@ import { useFilter } from "../../../feature/datatable/hooks/useFilter";
 import axios from "axios";
 import Spinner from "../../../components/Spinner";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const prisma = new PrismaClient();
 
@@ -33,10 +34,10 @@ const columns: TableColumn<Comic>[] = [
   {
     name: "Action",
     button: true,
-    cell: (row) => (
+    cell: (row: Comic) => (
       <div className="flex flex-col gap-2 py-2">
         <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
-          edit
+          <Link href={`/admin/komik/${row.id}`}>edit</Link>
         </button>
         <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
           delete

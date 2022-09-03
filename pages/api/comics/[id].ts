@@ -6,17 +6,18 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Genre | Genre[] | any>
 ) {
+  const { id } = req.query;
   switch (req.method) {
     case "POST":
-      const data: Comic = req.body;
-      const newComic = await prisma.comic.create({ data });
-
-      return res.status(200).json(newComic);
+      const newEpisode = await prisma.episode.create({ data: req.body });
+      return res.status(200).json(newEpisode);
     case "DELETE":
       break;
     default:
-      const comics = await prisma.comic.findMany();
-
-      return res.status(200).json(comics);
+      const comic = await prisma.comic.findFirst({
+        where: { id: id?.toString() },
+        include: { episodes: true, genre: true },
+      });
+      return res.status(200).json(comic);
   }
 }

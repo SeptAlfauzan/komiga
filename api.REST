@@ -2,8 +2,15 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "username": "admin",
+    "username": "admin coba",
     "password": "qweradmin"
+}
+###
+POST http://localhost:3000/api/genres
+Content-Type: application/json
+
+{
+    "name": "testing only"
 }
 
 ###
@@ -21,5 +28,13 @@ Content-Type: application/json
 {
     "name": "admin",
     "description": "qweradmin",
-    "genreId": 1
+    "genreId": "1"
+}
+
+###
+POST http://localhost:3000/api/comics/fc6f1f7c-0b3a-44c7-8119-4320794968b3
+Content-Type: application/json
+
+{
+    "comicId": "fc6f1f7c-0b3a-44c7-8119-4320794968b3"
 }

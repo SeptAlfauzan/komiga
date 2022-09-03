@@ -6,7 +6,7 @@ import { genHash } from "../../../feature/auth/libs/auth";
 const prisma = new PrismaClient();
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<User>
+  res: NextApiResponse<User | User[] | any>
 ) {
   switch (req.method) {
     case "POST":
@@ -14,10 +14,10 @@ export default async function handler(
       const hash = await genHash(inputData.password);
       inputData.password = hash;
       const newUser = await prisma.user.create({ data: inputData });
-      res.status(200).json(newUser);
-      break;
+      return res.status(200).json(newUser);
+
     default:
-      res.status(500);
-      break;
+      const users = await prisma.user.findMany();
+      return res.status(200).json(users);
   }
 }
