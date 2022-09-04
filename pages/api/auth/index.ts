@@ -4,8 +4,8 @@ import { setCookie } from "cookies-next";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { compareHash } from "../../../feature/auth/libs/auth";
 import { generateToken } from "../../../feature/jwt/libs/jose";
+import { prisma } from "../../../prisma/prisma";
 
-const prisma = new PrismaClient();
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User | boolean | string>

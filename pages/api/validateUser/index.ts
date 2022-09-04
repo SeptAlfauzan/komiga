@@ -2,8 +2,8 @@
 import { PrismaClient, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { genHash } from "../../../feature/auth/libs/auth";
+import { prisma } from "../../../prisma/prisma";
 
-const prisma = new PrismaClient();
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User | string>

@@ -15,39 +15,13 @@ import { Comic, Episode, Genre, PrismaClient } from "@prisma/client";
 import axios from "axios";
 import Spinner from "../../../components/Spinner";
 import { useRouter } from "next/router";
-
-const prisma = new PrismaClient();
-
-const columns: TableColumn<Episode>[] = [
-  {
-    name: "Episode",
-    selector: (row: Episode) => row.created.toString(),
-    sortable: true,
-  },
-  {
-    name: "Created",
-    selector: (row: Episode) => row.created.toString(),
-    sortable: true,
-  },
-  {
-    name: "Action",
-    button: true,
-    cell: (row) => (
-      <div className="flex flex-col gap-2 py-2">
-        <button className="bg-yellow-300 rounded-full px-4 text-black hover:scale-105 transition-all duration-150 py-0.5">
-          upload files
-        </button>
-        <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150 py-0.5">
-          delete
-        </button>
-      </div>
-    ),
-  },
-];
+import Link from "next/link";
+import { prisma } from "../../../prisma/prisma";
 
 interface ComicData extends Comic {
   episodes: Episode[];
   genre: Genre;
+  url?: string;
 }
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -56,6 +30,7 @@ export const getServerSideProps = async (
     where: { id: context.params!.id!.toString() },
     include: { episodes: true, genre: true },
   });
+
   return {
     props: {
       comic: JSON.parse(JSON.stringify(comic)),
@@ -184,3 +159,32 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
 };
 
 export default ComicEpisode;
+
+const columns: TableColumn<Episode>[] = [
+  {
+    name: "Episode",
+    selector: (row: Episode) => row.created.toString(),
+    sortable: true,
+  },
+  {
+    name: "Created",
+    selector: (row: Episode) => row.created.toString(),
+    sortable: true,
+  },
+  {
+    name: "Action",
+    button: true,
+    cell: (row: Episode) => (
+      <div className="flex flex-col gap-2 py-2">
+        <button className="bg-yellow-300 rounded-full px-4 text-black hover:scale-105 transition-all duration-150 py-0.5">
+          <Link href={`/admin/komik/${row.comicId}/${row.id}`}>
+            see image panels
+          </Link>
+        </button>
+        <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150 py-0.5">
+          delete
+        </button>
+      </div>
+    ),
+  },
+];

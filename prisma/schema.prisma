@@ -27,7 +27,7 @@ model User{
 
 model Genre{
   id String @id @default(uuid())
-  name String
+  name String @unique
   comics Comic[] 
 }
 
@@ -50,7 +50,8 @@ model Episode{
 
 model Panel{
   id String @id @default(uuid())
-  image String
+  imageURL String
   episode Episode @relation(fields: [episodeId], references: [id]) 
-  episodeId String 
+  episodeId String
+  order Int?
 }

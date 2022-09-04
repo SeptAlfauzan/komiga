@@ -3,6 +3,7 @@ import { IoCloseCircle } from "react-icons/io5";
 
 interface ModalProps {
   children?: ReactNode;
+  title?: string;
 }
 
 export interface ModalHandle {
@@ -10,7 +11,7 @@ export interface ModalHandle {
 }
 
 const Modal: React.ForwardRefRenderFunction<ModalHandle, ModalProps> = (
-  { children },
+  { children, title },
   ref
 ) => {
   const [active, setActive] = React.useState<boolean>(false);
@@ -36,7 +37,7 @@ const Modal: React.ForwardRefRenderFunction<ModalHandle, ModalProps> = (
     >
       <div className="w-2/3 md:w-1/2 h-1/2 bg-white border shadow-2xl mx-auto opacity-100 rounded py-10 px-8 mt-[25vh] z-30 overflow-clip relative">
         <header className="flex justify-between">
-          <h3 className="text-xl font-bold">Title</h3>
+          <h3 className="text-xl font-bold mb-3">{title || "Title"}</h3>
           <button
             onClick={() => setActive(false)}
             className="text-zinc-400 text-xl absolute top-5 right-5"

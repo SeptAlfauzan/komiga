@@ -1,7 +1,7 @@
 import { Comic, Genre, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { prisma } from "../../../prisma/prisma";
 
-const prisma = new PrismaClient();
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Genre | Genre[] | any>
@@ -15,7 +15,7 @@ export default async function handler(
     case "DELETE":
       break;
     default:
-      const comics = await prisma.comic.findMany();
+      const comics = await prisma.comic.findMany({ include: { genre: true } });
 
       return res.status(200).json(comics);
   }

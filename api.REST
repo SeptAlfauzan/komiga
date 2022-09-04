@@ -2,7 +2,7 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-    "username": "admin coba",
+    "username": "admin",
     "password": "qweradmin"
 }
 ###
@@ -20,6 +20,39 @@ Content-Type: application/json
 {
     "username": "admin",
     "password": "qweradmin"
+}
+###
+POST http://localhost:3000/api/panels 
+Content-Type: application/json
+
+{
+    "episodeId": "968164ea-ff04-40ee-a38a-c1681c345c13",
+    "image": {
+    "type": "Buffer",
+    "data": [
+        117,
+        171,
+        90,
+        138,
+        102,
+        160,
+        123,
+        250,
+        103,
+        129,
+        182,
+        172,
+        123,
+        174,
+        34,
+        84,
+        19,
+        145,
+        195,
+        66,
+        134
+    ]
+}
 }
 ###
 POST http://localhost:3000/api/comics 

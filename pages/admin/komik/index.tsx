@@ -13,59 +13,15 @@ import axios from "axios";
 import Spinner from "../../../components/Spinner";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { prisma } from "../../../prisma/prisma";
 
-const prisma = new PrismaClient();
-
-const columns: TableColumn<Comic>[] = [
-  {
-    name: "Nama",
-    selector: (row: Comic) => row.name,
-    sortable: true,
-  },
-  {
-    name: "Description",
-    selector: (row: Comic) => row.description,
-  },
-  {
-    name: "Genre",
-    selector: (row: Comic) => row.genreId,
-    sortable: true,
-  },
-  {
-    name: "Action",
-    button: true,
-    cell: (row: Comic) => (
-      <div className="flex flex-col gap-2 py-2">
-        <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
-          <Link href={`/admin/komik/${row.id}`}>edit</Link>
-        </button>
-        <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
-          delete
-        </button>
-      </div>
-    ),
-  },
-];
+interface ComicData extends Comic {
+  genre: Genre;
+}
 
 export const getServerSideProps = async () => {
-  const rawData: DataRow[] = [
-    {
-      key: 1,
-      title: "Beetlejuice",
-      year: "1988",
-    },
-    {
-      key: 2,
-      title: "Ghostbusters",
-      year: "1984",
-    },
-    {
-      key: 2,
-      title: "Ghostbusters",
-      year: "1984",
-    },
-  ];
-  const comics: Comic[] = (await prisma.comic.findMany()) || [];
+  const comics: ComicData[] =
+    (await prisma.comic.findMany({ include: { genre: true } })) || [];
   const genres: Genre[] = (await prisma.genre.findMany()) || [];
   return {
     props: {
@@ -80,7 +36,7 @@ function Comic({
   comics,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const modal = React.useRef<ModalHandle | null>(null);
-  const [data, setData] = React.useState<Comic[]>(comics);
+  const [data, setData] = React.useState<ComicData[]>(comics);
   const router = useRouter();
 
   React.useEffect(() => {
@@ -219,3 +175,34 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, genre, refresh }) => {
 };
 
 export default Comic;
+
+const columns: TableColumn<ComicData>[] = [
+  {
+    name: "Nama",
+    selector: (row: ComicData) => row.name,
+    sortable: true,
+  },
+  {
+    name: "Description",
+    selector: (row: ComicData) => row.description,
+  },
+  {
+    name: "Genre",
+    selector: (row: ComicData) => row.genre.name,
+    sortable: true,
+  },
+  {
+    name: "Action",
+    button: true,
+    cell: (row: Comic) => (
+      <div className="flex flex-col gap-2 py-2">
+        <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
+          <Link href={`/admin/komik/${row.id}`}>edit</Link>
+        </button>
+        <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
+          delete
+        </button>
+      </div>
+    ),
+  },
+];
