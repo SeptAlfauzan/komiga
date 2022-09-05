@@ -17,7 +17,7 @@ const MainLayout: React.FC<Props> = ({ children }) => {
       <main className="bg-[#F6F6F6]">{children}</main>
 
       <footer className="bg-zinc-800 text-white text-center py-10">
-        Powered by
+        &copy; KOMIGA 2022
       </footer>
     </div>
   );

@@ -9,7 +9,7 @@ const NavBar: React.FC = () => {
     <nav
       className={`fixed left-0 z-10 flex gap-3 md:flex-row flex-col w-[10px] md:w-full bg-white  px-[80px] md:px-[169px] py-[60px] md:py-5 h-full md:h-fit md:shadow-none shadow-xl ${
         minimize ? " -translate-x-full" : "translate-x-0"
-      } md:translate-x-0 transition-all duration-150`}
+      } md:translate-x-0 transition-all duration-150 z-20`}
     >
       <button
         className={`fixed p-3 top-4 bg-white block md:hidden ${
