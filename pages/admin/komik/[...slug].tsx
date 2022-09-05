@@ -72,7 +72,7 @@ function PanelComicEpisode({
 
   React.useEffect(() => {
     const sortedData = data.map((data: Panel, i, number) => {
-      data.order = i;
+      // data.order = i;
       return data;
     });
     const sortedId = data.map((data: Panel, i, number) => ({ id: data.id }));
