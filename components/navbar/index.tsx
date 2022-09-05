@@ -25,7 +25,7 @@ const NavBar: React.FC = () => {
         className="text-yellow-300 font-bold mr-auto"
       />
       <LinkNav text="Masuk" href="/auth" />
-      <LinkNav text="Buat Akun" href="" />
+      {/* <LinkNav text="Buat Akun" href="" /> */}
     </nav>
   );
 };

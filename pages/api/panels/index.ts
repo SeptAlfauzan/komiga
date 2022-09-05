@@ -16,6 +16,18 @@ export default async function handler(
     case "POST":
       const newPanel = await prisma.panel.create({ data: req.body });
       return res.status(200).json(newPanel);
+    case "PUT":
+      try {
+        const updatedData = await prisma.panel.updateMany({
+          data: {},
+          where: {},
+        });
+        console.log(updatedData);
+        return res.status(200).json(updatedData);
+      } catch (error) {
+        console.log(error);
+        return res.status(200).json(error);
+      }
     case "DELETE":
       break;
     default:

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 interface Props {}
@@ -18,9 +19,11 @@ const CardThumbnail: React.FC = () => {
           />
         </div>
       </div>
-      <button className="border-black border-2 rounded-lg px-2 md:px-4 py-2 w-full mt-2 md:mt-5 hover:bg-black hover:text-white peer-hover:bg-black peer-hover:text-white peer-hover:scale-125 duration-150 h-fit">
-        Baca Sekarang
-      </button>
+      <Link href="/komik/komik-1">
+        <button className="border-black border-2 rounded-lg px-2 md:px-4 py-2 w-full mt-2 md:mt-5 hover:bg-black hover:text-white peer-hover:bg-black peer-hover:text-white peer-hover:scale-125 duration-150 h-fit">
+          Baca Sekarang
+        </button>
+      </Link>
     </div>
   );
 };

@@ -10,6 +10,9 @@ import axios from "axios";
 import ImageKit from "imagekit";
 import { prisma } from "../../../prisma/prisma";
 import Image from "next/image";
+import { getBase64string } from "../../../utils/base64";
+import { useRefetch } from "../../../hooks/useRefetch";
+import { ReactSortable } from "react-sortablejs";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -34,48 +37,8 @@ function PanelComicEpisode({
   const [files, setFiles] = React.useState<
     { episodeId: string; image: File }[]
   >([]);
-  const [imgbase64, setImgbase64] = React.useState<string>();
   const [data, setData] = React.useState<Panel[]>(panels);
   const modal = React.useRef<ModalHandle | null>(null);
-
-  const getImageFile = async (file: FileWithPath): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      try {
-        const reader = new FileReader();
-
-        reader.readAsArrayBuffer(file);
-
-        reader.onload = () => {
-          if (!!reader.result) {
-            resolve(reader.result as string);
-          }
-        };
-      } catch (error) {
-        reject(error);
-      }
-    });
-  };
-
-  const getBase64string = async (file: FileWithPath): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        // Use a regex to remove data url
-        try {
-          const base64String = reader.result
-            ?.toString()
-            .replace("data:", "")
-            .replace(/^.+,/, "");
-
-          return resolve(base64String!);
-        } catch (error) {
-          return reject(error);
-        }
-        // Logs wL2dvYWwgbW9yZ...
-      };
-      reader.readAsDataURL(file);
-    });
-  };
 
   const onFileInput = async (file: File[]) => {
     const episodeId = router.query.slug![1];
@@ -101,9 +64,30 @@ function PanelComicEpisode({
         imageURL: url,
         episodeId: episodeId,
       });
-      console.log(newPanel.data);
-    } catch (error) {}
+      router.replace(router.asPath); //reload new data by replace current router
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  React.useEffect(() => {
+    const sortedData = data.map((data: Panel, i, number) => {
+      data.order = i;
+      return data;
+    });
+    const sortedId = data.map((data: Panel, i, number) => ({ id: data.id }));
+
+    const updateBody = { data: sortedData, where: sortedId };
+    const testUpdate = async () => {
+      console.log(
+        "test",
+        await (
+          await axios.put("/api/panels", updateBody)
+        ).data
+      );
+    };
+    console.log(sortedData);
+  }, [data]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -119,50 +103,9 @@ function PanelComicEpisode({
 
   return (
     <DashboardLayout>
-      <div className="w-full min-h-screen flex flex-wrap gap-10">
-        {/* <button
-          className="bg-black px-5 mt-5 py-1 rounded-lg text-white h-fit"
-          onClick={() => modal.current?.toggle()}
-        >
-          Tambah file
-        </button> */}
-        <DragAndDropFile
-          options={{
-            accept: { "image/png": [".png", ".jpeg", ".gif", ".jpg"] },
-            multiple: false,
-            // maxSize: 2024,
-            onDrop: (files) => onFileInput(files),
-          }}
-        />
-
-        <div className="flex flex-wrap w-full">
-          <h3 className="w-full text-xl font-bold">Daftar panel gambar</h3>
-          {data.map((d, i) => (
-            <div key={i}>
-              <div
-                className="w-40 h-40 relative border rounded"
-                onClick={() => alert()}
-              >
-                <Image
-                  src={d.imageURL}
-                  layout="fill"
-                  objectFit="cover"
-                  alt="_"
-                />
-              </div>
-              <small>{d.episodeId}</small>
-            </div>
-          ))}
-        </div>
-      </div>
-      <Modal title="Upload file komik" ref={modal}>
-        <form onSubmit={onSubmit} className="w-full flex flex-col">
-          {/* <input
-            type="file"
-            name=""
-            id=""
-            onChange={(e) => console.log(e.target.files[0])}
-          /> */}
+      <div className="w-full flex flex-col gap-5">
+        <div className="w-full">
+          <h3 className="text-2xl mb-3 font-bold">Upload berkas</h3>
           <DragAndDropFile
             options={{
               accept: { "image/png": [".png", ".jpeg", ".gif", ".jpg"] },
@@ -171,22 +114,52 @@ function PanelComicEpisode({
               onDrop: (files) => onFileInput(files),
             }}
           />
-          <div className="ml-auto">
-            <button
-              type="reset"
-              className="bg-zinc-300 px-4 py-1 mt-3 rounded-lg ml-auto"
-              onClick={() => modal.current?.toggle()}
+        </div>
+        <button onClick={() => modal.current?.toggle()}>Preview</button>
+        <div className="flex flex-wrap w-full mt-0 gap-3">
+          <h3 className="w-full text-xl font-bold">Daftar panel gambar</h3>
+          <ReactSortable
+            list={data}
+            setList={setData}
+            className="flex flex-wrap"
+          >
+            {data.map((d, i) => (
+              <div
+                key={i}
+                className="w-40 h-40 relative border rounded mb-10"
+                onClick={() => alert()}
+              >
+                <Image
+                  src={d.imageURL}
+                  layout="fill"
+                  objectFit="cover"
+                  alt="_"
+                />
+                <small className="absolute -bottom-10 text-zinc-400">
+                  {d.id}
+                </small>
+              </div>
+            ))}
+          </ReactSortable>
+        </div>
+      </div>
+      <Modal title="Preview Episode komik" ref={modal}>
+        <div className="flex flex-col">
+          {data.map((d, i) => (
+            <div
+              key={i}
+              // style={{ width: "100%", height: "100%", position: "relative" }}
+              className="w-[100%] h-[50vh] relative"
             >
-              Batal
-            </button>
-            <button
-              type="submit"
-              className="bg-black text-white px-4 py-1 mt-3 rounded-lg ml-2"
-            >
-              Upload
-            </button>
-          </div>
-        </form>
+              <Image
+                src={d.imageURL}
+                layout="fill"
+                // objectFit="contain"
+                alt="_"
+              />
+            </div>
+          ))}
+        </div>
       </Modal>
     </DashboardLayout>
   );

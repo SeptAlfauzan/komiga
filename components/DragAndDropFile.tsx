@@ -18,7 +18,7 @@ const DragAndDropFile: React.FC<DragAndDropFileProps> = ({
       {isDragActive ? (
         <p>Drop the files here ...</p>
       ) : (
-        <div className="border w-full h-40 bg-blue-50 rounded-lg flex items-center justify-center px-10">
+        <div className="border-2 border-dashed w-full h-40 bg-blue-50 rounded-lg flex items-center justify-center px-10">
           <p className="text-xl text-zinc-500">
             {title
               ? title
