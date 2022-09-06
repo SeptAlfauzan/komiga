@@ -23,6 +23,11 @@ interface ComicData extends Comic {
   genre: Genre;
   url?: string;
 }
+
+interface EpisodeWithOrder extends Episode {
+  order?: number;
+}
+
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
@@ -52,7 +57,13 @@ function ComicEpisode({
         const response: ComicData = await (
           await axios.get(`/api/comics/${router.query.id}`)
         ).data;
-        setData(response.episodes);
+        const dataWithNumber = response.episodes.map(
+          (episode: EpisodeWithOrder, i: number) => {
+            episode.order = i + 1;
+            return episode;
+          }
+        );
+        setData(dataWithNumber);
       } catch (error) {
         alert(`refetch ${error}`);
       }
@@ -118,7 +129,7 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col h-full">
+    <form onSubmit={onSubmit} className="flex flex-col h-full pb-10">
       <div className="mt-4 flex flex-col">
         <label className="text-zinc-400 mb-2" htmlFor="name">
           Nama Komik: {comic?.name}
@@ -160,10 +171,10 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
 
 export default ComicEpisode;
 
-const columns: TableColumn<Episode>[] = [
+const columns: TableColumn<EpisodeWithOrder>[] = [
   {
     name: "Episode",
-    selector: (row: Episode) => row.created.toString(),
+    selector: (row: EpisodeWithOrder) => row.order || 0,
     sortable: true,
   },
   {

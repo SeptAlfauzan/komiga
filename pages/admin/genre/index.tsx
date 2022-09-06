@@ -83,6 +83,7 @@ function GenreDashboard({
 interface FormProps {
   onCancel?: () => void;
   refresh?: () => void;
+  previousData?: Genre;
 }
 const FormNewGenre: React.FC<FormProps> = ({ onCancel, refresh }) => {
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -107,7 +108,7 @@ const FormNewGenre: React.FC<FormProps> = ({ onCancel, refresh }) => {
   });
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col h-full">
+    <form onSubmit={onSubmit} className="flex flex-col h-full pb-10">
       <div className="mt-4 flex flex-col">
         <label className="text-zinc-400" htmlFor="name">
           Nama

@@ -1,10 +1,24 @@
-import type { NextPage } from "next";
+import type { InferGetServerSidePropsType, NextPage } from "next";
 import MainLayout from "../components/layouts/MainLayout";
 import Image from "next/image";
 import CardThumbnail from "../components/CardThumbnail";
 import NavBar from "../components/navbar";
+import { Comic } from "@prisma/client";
+import { prisma } from "../prisma/prisma";
 
-const Home: NextPage = () => {
+export const getServerSideProps = async () => {
+  const comics: Comic[] = await prisma.comic.findMany();
+
+  return {
+    props: {
+      comics,
+    },
+  };
+};
+
+function Home({
+  comics,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <MainLayout>
       <NavBar />
@@ -28,18 +42,18 @@ const Home: NextPage = () => {
       </section>
       <section
         id="comics"
-        className="h-screen flex flex-col w-full  bg-yellow-300 px-[50px] md:px-[169px] py-[100px] "
+        className="min-h-screen flex flex-col w-full  bg-yellow-300 px-[50px] md:px-[169px] py-[100px] relative"
       >
         <h3 className="text-4xl mb-10">Daftar Komik</h3>
-        <div className="flex w-full flex-wrap justify-between">
-          {new Array(1).fill(null).map((data, i) => (
-            <CardThumbnail key={i} />
+        <div className="flex w-full flex-wrap gap-[2.5%] relative">
+          {comics.map((data, i) => (
+            <CardThumbnail url={`/komik/${data.id}`} key={i} />
           ))}
         </div>
       </section>
     </MainLayout>
   );
-};
+}
 
 const Banner: React.FC = () => {
   return (

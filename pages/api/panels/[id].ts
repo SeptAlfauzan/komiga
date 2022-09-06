@@ -1,4 +1,4 @@
-import { Comic, Genre, PrismaClient } from "@prisma/client";
+import { Comic, Genre, Panel, PrismaClient } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../prisma/prisma";
 
@@ -9,15 +9,17 @@ export default async function handler(
   const { id } = req.query;
   switch (req.method) {
     case "POST":
-      const newEpisode = await prisma.episode.create({ data: req.body });
-      return res.status(200).json(newEpisode);
+      break;
     case "DELETE":
       break;
     default:
-      const comic = await prisma.comic.findFirst({
-        where: { id: id?.toString() },
-        include: { episodes: true, genre: true },
+      const { id, episodeId } = req.query;
+      console.log(id, episodeId);
+      const panels: Panel[] = await prisma.panel.findMany({
+        where: {
+          episode: { id: episodeId?.toString(), comicId: id?.toString() },
+        },
       });
-      return res.status(200).json(comic);
+      return res.status(200).json(panels);
   }
 }

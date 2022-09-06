@@ -26,9 +26,23 @@ export default async function handler(
         return res.status(200).json(updatedData);
       } catch (error) {
         console.log(error);
-        return res.status(200).json(error);
+        return res.status(500).json(error);
       }
     case "DELETE":
+      try {
+        const { id, episode } = req.query;
+        // const updatedPanel = await prisma.episode.update({
+        //   where: { id: episode!.toString() },
+        //   data: { panels: { set: [] } },
+        //   include: { panels: true },
+        // });
+        const deleted = await prisma.panel.delete({
+          where: { id: id!.toString() },
+        });
+        return res.status(200).json(deleted);
+      } catch (error) {
+        return res.status(500).json(error);
+      }
       break;
     default:
       const panels = await prisma.panel.findMany({

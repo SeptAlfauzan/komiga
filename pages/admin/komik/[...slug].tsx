@@ -22,7 +22,10 @@ export const getServerSideProps = async (
       notFound: true,
     };
   }
-  const panels: Panel[] = await prisma.panel.findMany();
+  const [comicId, episodeId] = Array.from(context.query.slug!);
+  const panels: Panel[] = await prisma.panel.findMany({
+    where: { episode: { id: episodeId, comicId } },
+  });
   return {
     props: {
       panels,
@@ -37,7 +40,15 @@ function PanelComicEpisode({
   const [files, setFiles] = React.useState<
     { episodeId: string; image: File }[]
   >([]);
-  const [data, setData] = React.useState<Panel[]>(panels);
+  const [comicId, episodeId] = Array.from(router.query.slug!);
+  console.log(comicId, episodeId);
+  const [data] = useRefetch(
+    panels,
+    `/api/panels/${comicId}?episodeId=${episodeId}`
+  );
+  // const [data, setData] = React.useState<Panel[]>(panels);
+  const [isFetching, setIsFetching] = React.useState<boolean>(false);
+
   const modal = React.useRef<ModalHandle | null>(null);
 
   const onFileInput = async (file: File[]) => {
@@ -45,6 +56,7 @@ function PanelComicEpisode({
     const image = await getBase64string(file[0]);
     const responsetoken = await axios.get("/api/imagekitAuth");
     const { signature, expire, token } = responsetoken.data;
+    setIsFetching(true);
     try {
       const body = {
         file: image,
@@ -54,6 +66,7 @@ function PanelComicEpisode({
         expire,
         token,
       };
+      console.log("test", body);
       const response = await axios.post(
         "https://upload.imagekit.io/api/v1/files/upload",
         body,
@@ -64,6 +77,7 @@ function PanelComicEpisode({
         imageURL: url,
         episodeId: episodeId,
       });
+      setIsFetching(false);
       router.replace(router.asPath); //reload new data by replace current router
     } catch (error) {
       console.log(error);
@@ -101,11 +115,23 @@ function PanelComicEpisode({
     }
   };
 
+  const deletePanel = async (id: string) => {
+    try {
+      const response = await axios.delete(`/api/panels?id=${id}`);
+      router.replace(router.asPath);
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="w-full flex flex-col gap-5">
         <div className="w-full">
-          <h3 className="text-2xl mb-3 font-bold">Upload berkas</h3>
+          <h3 className="text-2xl mb-3 font-bold">
+            Upload berkas {isFetching ? "Uploading new file into server" : null}
+          </h3>
           <DragAndDropFile
             options={{
               accept: { "image/png": [".png", ".jpeg", ".gif", ".jpg"] },
@@ -118,16 +144,20 @@ function PanelComicEpisode({
         <button onClick={() => modal.current?.toggle()}>Preview</button>
         <div className="flex flex-wrap w-full mt-0 gap-3">
           <h3 className="w-full text-xl font-bold">Daftar panel gambar</h3>
-          <ReactSortable
+          {/* <ReactSortable
             list={data}
             setList={setData}
             className="flex flex-wrap"
-          >
-            {data.map((d, i) => (
+          > */}
+          <div className="flex flex-wrap">
+            {data.map((d: Panel, i) => (
               <div
                 key={i}
                 className="w-40 h-40 relative border rounded mb-10"
-                onClick={() => alert()}
+                onClick={() => {
+                  const answer = confirm("Klik yes untuk menghapus");
+                  if (answer) deletePanel(d.id);
+                }}
               >
                 <Image
                   src={d.imageURL}
@@ -140,11 +170,12 @@ function PanelComicEpisode({
                 </small>
               </div>
             ))}
-          </ReactSortable>
+          </div>
+          {/* </ReactSortable> */}
         </div>
       </div>
       <Modal title="Preview Episode komik" ref={modal}>
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-10">
           {data.map((d, i) => (
             <div
               key={i}

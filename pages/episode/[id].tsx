@@ -1,8 +1,19 @@
-import { NextPage } from "next";
+import { Episode } from "@prisma/client";
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import NavBar from "../../components/navbar";
+import { prisma } from "../../prisma/prisma";
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  const comicId = context.query.id;
+  const episodes: Episode = await prisma.episode.findMany({
+    where: { comicId: comicId?.toString() },
+  });
+};
 
 const KomikId: NextPage = () => {
   return (
