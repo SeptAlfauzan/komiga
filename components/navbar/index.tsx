@@ -21,7 +21,7 @@ const NavBar: React.FC = () => {
       </button>
       <LinkNav
         text="KOMIGA"
-        href=""
+        href="/"
         className="text-yellow-300 font-bold mr-auto"
       />
       <LinkNav text="Masuk" href="/auth" />

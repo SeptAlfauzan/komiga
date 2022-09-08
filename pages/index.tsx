@@ -60,11 +60,9 @@ const Banner: React.FC = () => {
     <div className="relative w-full h-full overflow-clip">
       <div className="h-[333px] w-[333px] rounded-full bg-blue-500 absolute top-0 left-0" />
       <div className="h-[333px] w-[333px] rounded-full bg-yellow-300 absolute bottom-10 right-10" />
-      <div className="absolute translate-x-[50%] translate-y-[50%] w-[200px] h-[200px] md:block hidden">
+      <div className="absolute translate-x-[50%] translate-y-[15%] w-[200px] h-[300px] md:block hidden rounded-lg overflow-clip">
         <Image
-          src={
-            "https://images.unsplash.com/photo-1620336655052-b57986f5a26a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OHx8Y29taWN8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-          }
+          src={"/assets/images/cover gunung meletus fix.jpg"}
           alt="image banner"
           layout={"fill"}
           objectFit={"cover"}

@@ -53,7 +53,7 @@ function KomikId({
         </div>
         <div className="flex flex-col gap-4 w-3/4 rounded min-h-[80vh] bg-white -mt-[100px] py-10 px-10 z-10">
           {data.episodes.map((data, i) => (
-            <Link key={i} href="/episode/uasdaklsdasklduasd">
+            <Link key={i} href={`/komik/${data.comicId}/${data.id}`}>
               <div className="flex px-2 justify-between rounded border-b-2 text-lg cursor-pointer hover:bg-blue-50 text-zinc-600">
                 <p>Episode {i + 1}</p>
                 <div className="text-zinc-300 text-xs">

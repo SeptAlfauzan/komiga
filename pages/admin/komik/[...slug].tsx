@@ -129,17 +129,19 @@ function PanelComicEpisode({
     <DashboardLayout>
       <div className="w-full flex flex-col gap-5">
         <div className="w-full">
-          <h3 className="text-2xl mb-3 font-bold">
-            Upload berkas {isFetching ? "Uploading new file into server" : null}
-          </h3>
-          <DragAndDropFile
-            options={{
-              accept: { "image/png": [".png", ".jpeg", ".gif", ".jpg"] },
-              multiple: false,
-              // maxSize: 2024,
-              onDrop: (files) => onFileInput(files),
-            }}
-          />
+          <h3 className="text-2xl mb-3 font-bold">Upload berkas</h3>
+          {isFetching ? (
+            "Uploading new file into server"
+          ) : (
+            <DragAndDropFile
+              options={{
+                accept: { "image/png": [".png", ".jpeg", ".gif", ".jpg"] },
+                multiple: false,
+                // maxSize: 2024,
+                onDrop: (files) => onFileInput(files),
+              }}
+            />
+          )}
         </div>
         <button onClick={() => modal.current?.toggle()}>Preview</button>
         <div className="flex flex-wrap w-full mt-0 gap-3">

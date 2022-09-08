@@ -6,14 +6,14 @@ import MainLayout from "../../components/layouts/MainLayout";
 import NavBar from "../../components/navbar";
 import { prisma } from "../../prisma/prisma";
 
-export const getServerSideProps = async (
-  context: GetServerSidePropsContext
-) => {
-  const comicId = context.query.id;
-  const episodes: Episode = await prisma.episode.findMany({
-    where: { comicId: comicId?.toString() },
-  });
-};
+// export const getServerSideProps = async (
+//   context: GetServerSidePropsContext
+// ) => {
+//   const comicId = context.query.id;
+//   const episodes: Episode = await prisma.episode.findMany({
+//     where: { comicId: comicId?.toString() },
+//   });
+// };
 
 const KomikId: NextPage = () => {
   return (
