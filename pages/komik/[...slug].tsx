@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import NavBar from "../../components/navbar";
+import { useRefetch } from "../../hooks/useRefetch";
 import { prisma } from "../../prisma/prisma";
 
 interface EpisodeWithPanels {

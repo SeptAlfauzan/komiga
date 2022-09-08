@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import NextNProgress from "nextjs-progressbar";
 import React, { ReactNode } from "react";
 
 interface Props {
@@ -14,7 +15,15 @@ const MainLayout: React.FC<Props> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-[#F6F6F6]">{children}</main>
+      <main className="bg-[#F6F6F6]">
+        <NextNProgress
+          color="#29D"
+          startPosition={0.3}
+          stopDelayMs={200}
+          height={3}
+        />
+        {children}
+      </main>
 
       <footer className="bg-zinc-800 text-white text-center py-10">
         &copy; KOMIGA 2022
