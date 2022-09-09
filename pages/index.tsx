@@ -1,13 +1,20 @@
+import React from "react";
 import type { InferGetServerSidePropsType, NextPage } from "next";
 import MainLayout from "../components/layouts/MainLayout";
 import Image from "next/image";
 import CardThumbnail from "../components/CardThumbnail";
 import NavBar from "../components/navbar";
-import { Comic } from "@prisma/client";
+import { Comic, Genre } from "@prisma/client";
 import { prisma } from "../prisma/prisma";
 
+interface ComicWithGenre extends Comic {
+  genre: Genre;
+}
+
 export const getServerSideProps = async () => {
-  const comics: Comic[] = await prisma.comic.findMany();
+  const comics: ComicWithGenre[] = await prisma.comic.findMany({
+    include: { genre: true },
+  });
 
   return {
     props: {
@@ -19,6 +26,21 @@ export const getServerSideProps = async () => {
 function Home({
   comics,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [items, setItems] = React.useState<(ComicWithGenre | undefined)[]>(
+    comics || []
+  );
+
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input: string = event.target.value.toLowerCase();
+
+    if (event.target.value === "") return setItems(comics);
+    return setItems(
+      comics.map((comic: ComicWithGenre, i: number) => {
+        if (comic.genre.name.toLowerCase().includes(input)) return comic;
+      })
+    );
+  };
+  console.log(items);
   return (
     <MainLayout>
       <NavBar />
@@ -45,10 +67,17 @@ function Home({
         className="min-h-screen flex flex-col w-full  bg-yellow-300 px-[50px] md:px-[169px] py-[100px] relative"
       >
         <h3 className="text-4xl mb-10">Daftar Komik</h3>
+        <input
+          className="border px-3 py-1 rounded-full"
+          type="text"
+          onChange={handleFilter}
+        />
         <div className="flex w-full flex-wrap gap-[2.5%] relative">
-          {comics.map((data, i) => (
-            <CardThumbnail url={`/komik/${data.id}`} key={i} />
-          ))}
+          {items.map((data: ComicWithGenre | undefined, i: number) => {
+            if (data !== undefined)
+              return <CardThumbnail url={`/komik/${data?.id}`} key={i} />;
+          })}
+          {items.length === 1 && items[0] === undefined ? "HAH KOSONG?!" : null}
         </div>
       </section>
     </MainLayout>
