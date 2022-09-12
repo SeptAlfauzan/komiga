@@ -29,18 +29,22 @@ function Home({
   const [items, setItems] = React.useState<(ComicWithGenre | undefined)[]>(
     comics || []
   );
+  const [filter, setFilter] = React.useState<string>("");
 
-  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input: string = event.target.value.toLowerCase();
-
-    if (event.target.value === "") return setItems(comics);
+  React.useEffect(() => {
+    if (filter === "") return setItems(comics);
     return setItems(
       comics.map((comic: ComicWithGenre, i: number) => {
-        if (comic.genre.name.toLowerCase().includes(input)) return comic;
+        if (comic.genre.name.toLowerCase().includes(filter)) return comic;
       })
     );
-  };
-  console.log(items);
+  }, [filter, comics]);
+
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setFilter(event.target.value.toLowerCase());
+
+  const resetFilter = () => setFilter("");
+
   return (
     <MainLayout>
       <NavBar />
@@ -67,17 +71,34 @@ function Home({
         className="min-h-screen flex flex-col w-full  bg-yellow-300 px-[50px] md:px-[169px] py-[100px] relative"
       >
         <h3 className="text-4xl mb-10">Daftar Komik</h3>
-        <input
-          className="border px-3 py-1 rounded-full"
-          type="text"
-          onChange={handleFilter}
-        />
+        <div className="md:w-fit w-full flex flex-col relative mb-3 gap-2">
+          <label>Cari komik</label>
+          <input
+            className="pl-3 pr-6 py-1 rounded-full w-full focus:outline-blue-400 bg-white bg-opacity-50 text-zinc-600"
+            type="text"
+            placeholder="Cth. Gunung Meletus"
+            onChange={handleFilter}
+            value={filter}
+          />
+          {filter && (
+            <button
+              className="absolute right-3 bottom-[10%]"
+              onClick={resetFilter}
+            >
+              x
+            </button>
+          )}
+        </div>
         <div className="flex w-full flex-wrap gap-[2.5%] relative">
           {items.map((data: ComicWithGenre | undefined, i: number) => {
             if (data !== undefined)
               return <CardThumbnail url={`/komik/${data?.id}`} key={i} />;
           })}
-          {items.length === 1 && items[0] === undefined ? "HAH KOSONG?!" : null}
+          {items.length === 1 && items[0] === undefined ? (
+            <p className="text-xl text-zinc-700">
+              Maaf komik yang anda maksud tidak tersedia
+            </p>
+          ) : null}
         </div>
       </section>
     </MainLayout>

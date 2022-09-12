@@ -35,6 +35,7 @@ model Comic{
   id String @id @default(uuid())
   name String @unique
   description String
+  bannerImage String?
   genre Genre @relation(fields: [genreId], references: [id])
   genreId String
   episodes Episode[]

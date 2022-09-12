@@ -196,9 +196,16 @@ const columns: TableColumn<ComicData>[] = [
     button: true,
     cell: (row: Comic) => (
       <div className="flex flex-col gap-2 py-2">
-        <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
-          <Link href={`/admin/komik/${row.id}`}>edit</Link>
-        </button>
+        <Link href={`/admin/komik/${row.id}`}>
+          <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
+            episode
+          </button>
+        </Link>
+        <Link href={`/admin/komik/edit/${row.id}`}>
+          <button className="bg-yellow-300 rounded-full px-4 text-black hover:scale-105 transition-all duration-150">
+            edit
+          </button>
+        </Link>
         <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
           delete
         </button>
