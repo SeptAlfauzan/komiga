@@ -55,6 +55,7 @@ function ComicEpisode({
   const [imagePreview, setImagePreview] = React.useState<string>(
     comic?.bannerImage
   );
+  const [imageBase64, setImageBase64] = React.useState<string>("");
   const [data, setData] = React.useState<Episode[] | []>(comic?.episodes || []);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [uploadImg, setUploadImd] = React.useState<boolean>(false);
@@ -67,9 +68,9 @@ function ComicEpisode({
 
     setUploadImd(true);
     const imageBase64String = await getBase64string(file);
-    const response = await uploadImageKit(imageBase64String, "testing");
-    console.log(response);
-    setImagePreview(response);
+    const imageData = await getImageUrl(file);
+    setImagePreview(imageData);
+    setImageBase64(imageBase64String);
     setValue("bannerImage", image);
     setUploadImd(false);
   };
@@ -96,7 +97,20 @@ function ComicEpisode({
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    console.log(data);
+    try {
+      console.log(data);
+      const id = router.query.id;
+
+      const responseImage = await uploadImageKit(imageBase64, "updated_data");
+
+      if (responseImage) data.bannerImage = responseImage;
+
+      const updateResponse = await axios.put(`/api/comics/${id}`, data);
+      console.log("updated", updateResponse.data);
+      alert("update sukses");
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
   });
 

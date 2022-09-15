@@ -47,9 +47,16 @@ function KomikId({
         className="w-full min-h-screen h-fit relative flex flex-col items-center"
       >
         <div className="w-full h-[60vh]  bg-gradient-to-br from-blue-500 to-pink-700 relative">
-          <h3 className="absolute text-white top-28 text-center w-full text-5xl">
-            GENRE GUNUNG MELETUS
-          </h3>
+          <Image
+            src={data.bannerImage || ""}
+            alt={`${data.name}-banner-image`}
+            objectFit="cover"
+            layout="fill"
+          />
+          <div className="absolute text-white top-28 text-center w-full ">
+            <h3 className="text-5xl">{data.name}</h3>
+            <p>{data.description}</p>
+          </div>
         </div>
         <div className="flex flex-col gap-4 w-3/4 rounded min-h-[80vh] bg-white -mt-[100px] py-10 px-10 z-10">
           {data.episodes.map((data, i) => (

@@ -11,6 +11,14 @@ export default async function handler(
     case "POST":
       const newEpisode = await prisma.episode.create({ data: req.body });
       return res.status(200).json(newEpisode);
+    case "PUT":
+      const updated = await prisma.comic.update({
+        where: { id: id!.toString() },
+        data: req.body,
+      });
+      console.log(id);
+      console.log(req.body);
+      return res.status(200).json(updated);
     case "DELETE":
       break;
     default:
