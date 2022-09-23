@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
+import FlipBookWrapper from "../../components/FilpBookWrapper";
 import MainLayout from "../../components/layouts/MainLayout";
 import NavBar from "../../components/navbar";
 import { useRefetch } from "../../hooks/useRefetch";
@@ -76,37 +77,52 @@ function KomikId({
   return (
     <MainLayout>
       <NavBar />
-      <div
-        // style={{ width: "100%", height: "100%", position: "relative" }}
-        className="w-[100%] min-h-screen relative flex justify-center pt-[100px]"
-      >
-        <img
+      <div className="w-[100%] min-h-screen relative flex justify-center pt-[100px]">
+        {/* <img
           src={selectedEp.panels[0].imageURL}
           // height="100%"
           // width="100%"
           // layout="fill"
           // objectFit="contain"
           alt="_"
-        />
-      </div>
-      <div className="flex md:flex-row flex-col gap-3 items-center justify-center my-10">
-        {currentEpisodeIndex === 0 ? null : (
-          <a href={`/komik/${comicId}/${previousEpisodeId}`}>
-            <button className="bg-black text-white px-5 rounded-full w-fit py-1">
-              Sebelumnya
-            </button>
-          </a>
-        )}
-        {listEpisodes.length - 1 > currentEpisodeIndex ? (
-          <a href={`/komik/${comicId}/${nextEpisodeId}`}>
-            <button className="bg-black text-white px-5 rounded-full w-fit py-1">
-              Selanjutnya
-            </button>
-          </a>
-        ) : null}
+        /> */}
+        <FlipBookWrapper
+          isFirstEp={true}
+          isLastEp={false}
+          imagesUrl={selectedEp.panels.map((panel, i) => panel.imageURL)}
+        >
+          <div className="flex flex-col gap-3 items-center justify-center mt-[50%]">
+            {currentEpisodeIndex === 0 ? null : (
+              <LinkButton
+                url={`/komik/${comicId}/${previousEpisodeId}`}
+                label="Baca episode sebelumnya"
+              />
+            )}
+            {listEpisodes.length - 1 > currentEpisodeIndex ? (
+              <LinkButton
+                url={`/komik/${comicId}/${nextEpisodeId}`}
+                label="Baca episode selanjutnya"
+              />
+            ) : null}
+          </div>
+        </FlipBookWrapper>
       </div>
     </MainLayout>
   );
 }
+
+interface LinkButtonProps {
+  label: string;
+  url: string;
+}
+const LinkButton: React.FC<LinkButtonProps> = ({ label, url }) => {
+  return (
+    <a href={url}>
+      <button className="bg-black text-white px-5 rounded-full w-fit py-1">
+        {label}
+      </button>
+    </a>
+  );
+};
 
 export default KomikId;
