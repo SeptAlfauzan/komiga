@@ -75,26 +75,6 @@ function ComicEpisode({
     setUploadImd(false);
   };
 
-  React.useEffect(() => {
-    const refecth = async () => {
-      try {
-        const response: ComicData = await (
-          await axios.get(`/api/comics/${router.query.id}`)
-        ).data;
-        const dataWithNumber = response.episodes.map(
-          (episode: EpisodeWithOrder, i: number) => {
-            episode.order = i + 1;
-            return episode;
-          }
-        );
-        setData(dataWithNumber);
-      } catch (error) {
-        alert(`refetch ${error}`);
-      }
-    };
-    refecth();
-  }, [comic?.episodes, router.query.id]);
-
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     try {
@@ -143,6 +123,17 @@ function ComicEpisode({
               {...register("description")}
               className="border px-3 py-1 rounded focus:bg-blue-50 focus:outline-none"
               defaultValue={comicData.description}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="description" className="text-zinc-400 text-sm">
+              Link Evaluasi Quiziz
+            </label>
+            <input
+              type={"text"}
+              {...register("quizizLink")}
+              className="border px-3 py-1 rounded focus:bg-blue-50 focus:outline-none"
+              defaultValue={comicData.quizizLink}
             />
           </div>
           <div className="flex flex-col">
@@ -207,73 +198,5 @@ function ComicEpisode({
     </DashboardLayout>
   );
 }
-
-interface FormProps {
-  onCancel?: () => void;
-  comic?: ComicData | null;
-  refresh?: () => void;
-}
-const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Episode>();
-
-  const onSubmit = handleSubmit(async (data) => {
-    setLoading(true);
-    try {
-      const response = await axios.post(`/api/comics/${comic?.id}`, data);
-      if (response.status == 200 && onCancel) {
-        onCancel();
-        refresh && refresh(); //reload page to update ui
-      }
-    } catch (error) {
-      alert(error);
-    }
-    setLoading(false);
-  });
-
-  return (
-    <form onSubmit={onSubmit} className="flex flex-col h-full pb-10">
-      <div className="mt-4 flex flex-col">
-        <label className="text-zinc-400 mb-2" htmlFor="name">
-          Nama Komik: {comic?.name}
-        </label>
-        <label className="text-zinc-400" htmlFor="name">
-          Id Komik: {comic?.id}
-        </label>
-        <input
-          {...register("comicId", {
-            required: { message: "Perlu diisi", value: true },
-          })}
-          className="border rounded-xl px-5"
-          hidden
-          value={comic?.id}
-        />
-      </div>
-      <div className="flex gap-3 mt-auto ml-auto">
-        <button
-          className="bg-zinc-400 px-5 mt-5 py-1 rounded-lg text-white"
-          type="reset"
-          onClick={onCancel}
-        >
-          Batal
-        </button>
-        <button
-          className="bg-black px-5 mt-5 py-1 rounded-lg text-white"
-          type="submit"
-        >
-          {loading ? (
-            <Spinner className="text-white" />
-          ) : (
-            `Tambah episode ke-${comic!.episodes.length + 1}`
-          )}
-        </button>
-      </div>
-    </form>
-  );
-};
 
 export default ComicEpisode;

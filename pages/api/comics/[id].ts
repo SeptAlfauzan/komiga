@@ -26,7 +26,7 @@ export default async function handler(
       const comic = await prisma.episode.findMany({
         where: {
           comicId: id?.toString(),
-          // NOT: { created: "1000-10-10T00:00:00.000Z" },
+          NOT: { created: "1000-10-10T00:00:00.000Z" },
         },
         include: { comic: true },
         orderBy: { created: "asc" },

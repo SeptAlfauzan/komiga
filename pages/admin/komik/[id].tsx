@@ -38,23 +38,29 @@ export const getServerSideProps = async (
   const comic: Episode[] | null = await prisma.episode.findMany({
     where: {
       comicId: context.params!.id!.toString(),
-      // NOT: { created: "1000-10-10T00:00:00.000Z" },
+      NOT: { created: "1000-10-10T00:00:00.000Z" },
     },
     include: { comic: true },
     orderBy: {
       created: "asc",
     },
   });
+  const comicName = await prisma.comic.findFirst({
+    where: { id: context.params!.id!.toString() },
+    select: { name: true },
+  });
 
   return {
     props: {
       comic: JSON.parse(JSON.stringify(comic)),
+      comicName: comicName?.name,
     },
   };
 };
 
 function ComicEpisode({
   comic,
+  comicName,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const modal = React.useRef<ModalHandle | null>(null);
   const [data, setData] = React.useState<Episode[] | []>(comic || []);
@@ -80,12 +86,11 @@ function ComicEpisode({
     };
     refecth();
   }, [comic, router.query.id]);
-
   return (
     <DashboardLayout>
       <div className="w-full h-fit flex flex-wrap gap-10">
         <Table
-          title={"comic!.name.toString()"}
+          title={comicName || "Episode"}
           data={data}
           columns={columns}
           pagination
@@ -101,11 +106,13 @@ function ComicEpisode({
         />
       </div>
       <Modal ref={modal}>
-        {/* <FormNewComic
+        <FormNewComic
           comic={comic}
+          comicId={router.query.id?.toString()}
+          comicName={comicName}
           onCancel={() => modal.current?.toggle()}
           refresh={() => router.replace(router.asPath)}
-        /> */}
+        />
       </Modal>
     </DashboardLayout>
   );
@@ -113,11 +120,20 @@ function ComicEpisode({
 
 interface FormProps {
   onCancel?: () => void;
-  comic?: ComicData | null;
+  comic?: Episode[] | [];
+  comicId?: string;
+  comicName?: string;
   refresh?: () => void;
 }
-const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
+const FormNewComic: React.FC<FormProps> = ({
+  onCancel,
+  comic,
+  refresh,
+  comicId,
+  comicName,
+}) => {
   const [loading, setLoading] = React.useState<boolean>(false);
+  console.log(comicId);
   const {
     register,
     handleSubmit,
@@ -127,7 +143,7 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post(`/api/comics/${comic?.id}`, data);
+      const response = await axios.post(`/api/comics/${comicId}`, data);
       if (response.status == 200 && onCancel) {
         onCancel();
         refresh && refresh(); //reload page to update ui
@@ -142,10 +158,10 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
     <form onSubmit={onSubmit} className="flex flex-col h-full pb-10">
       <div className="mt-4 flex flex-col">
         <label className="text-zinc-400 mb-2" htmlFor="name">
-          Nama Komik: {comic?.name}
+          Nama Komik: {comicName}
         </label>
         <label className="text-zinc-400" htmlFor="name">
-          Id Komik: {comic?.id}
+          Id Komik: {comicId}
         </label>
         <input
           {...register("comicId", {
@@ -153,7 +169,7 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
           })}
           className="border rounded-xl px-5"
           hidden
-          value={comic?.id}
+          value={comicId}
         />
       </div>
       <div className="flex gap-3 mt-auto ml-auto">
@@ -171,7 +187,7 @@ const FormNewComic: React.FC<FormProps> = ({ onCancel, comic, refresh }) => {
           {loading ? (
             <Spinner className="text-white" />
           ) : (
-            `Tambah episode ke-${comic!.episodes.length + 1}`
+            `Tambah episode ke-${comic!.length + 1}`
           )}
         </button>
       </div>
@@ -195,17 +211,29 @@ const columns: TableColumn<EpisodeWithOrder>[] = [
   {
     name: "Action",
     button: true,
-    cell: (row: Episode) => (
-      <div className="flex flex-col gap-2 py-2">
-        <button className="bg-yellow-300 rounded-full px-4 text-black hover:scale-105 transition-all duration-150 py-0.5">
-          <Link href={`/admin/komik/${row.comicId}/${row.id}`}>
-            see image panels
-          </Link>
-        </button>
-        <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150 py-0.5">
-          delete
-        </button>
-      </div>
-    ),
+    cell: (row: Episode) => {
+      const alertDelete = async (arg: string) => {
+        const answer = confirm("Delete this episode?");
+        if (!answer) return;
+        console.log(arg);
+        await axios.delete(`/api/episodes/${arg}`);
+        window.location.reload();
+      };
+      return (
+        <div className="flex flex-col gap-2 py-2">
+          <button className="bg-yellow-300 rounded-full px-4 text-black hover:scale-105 transition-all duration-150 py-0.5">
+            <Link href={`/admin/komik/${row.comicId}/${row.id}`}>
+              see image panels
+            </Link>
+          </button>
+          <button
+            className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150 py-0.5"
+            onClick={() => alertDelete(row.id)}
+          >
+            delete
+          </button>
+        </div>
+      );
+    },
   },
 ];
