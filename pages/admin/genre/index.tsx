@@ -24,12 +24,12 @@ const columns: TableColumn<Genre>[] = [
     button: true,
     cell: (row: Genre) => (
       <div className="flex flex-col gap-2 py-2">
-        <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
+        {/* <button className="bg-violet-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
           edit
         </button>
         <button className="bg-pink-600 rounded-full px-4 text-white hover:scale-105 transition-all duration-150">
           delete
-        </button>
+        </button> */}
       </div>
     ),
   },

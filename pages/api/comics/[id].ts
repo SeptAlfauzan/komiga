@@ -9,6 +9,7 @@ export default async function handler(
   const { id } = req.query;
   switch (req.method) {
     case "POST":
+      req.body.created = new Date();
       const newEpisode = await prisma.episode.create({ data: req.body });
       return res.status(200).json(newEpisode);
     case "PUT":
@@ -22,9 +23,13 @@ export default async function handler(
     case "DELETE":
       break;
     default:
-      const comic = await prisma.comic.findFirst({
-        where: { id: id?.toString() },
-        include: { episodes: true, genre: true },
+      const comic = await prisma.episode.findMany({
+        where: {
+          comicId: id?.toString(),
+          // NOT: { created: "1000-10-10T00:00:00.000Z" },
+        },
+        include: { comic: true },
+        orderBy: { created: "asc" },
       });
       return res.status(200).json(comic);
   }

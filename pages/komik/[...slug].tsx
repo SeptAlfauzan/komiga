@@ -77,7 +77,7 @@ function KomikId({
   return (
     <MainLayout>
       <NavBar />
-      <div className="w-[100%] min-h-screen relative flex justify-center pt-[100px]">
+      <div className="w-[100%] min-h-screen relative flex justify-center pt-[100px] pb-[100px]">
         {/* <img
           src={selectedEp.panels[0].imageURL}
           // height="100%"

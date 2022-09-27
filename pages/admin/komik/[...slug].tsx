@@ -66,14 +66,16 @@ function PanelComicEpisode({
         expire,
         token,
       };
-      console.log("test", body);
+
       const response = await axios.post(
         "https://upload.imagekit.io/api/v1/files/upload",
         body,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      const { url } = response.data;
+      console.log(response.data);
+      const { url, fileId } = response.data;
       const newPanel = await axios.post("/api/panels", {
+        id: fileId,
         imageURL: url,
         episodeId: episodeId,
       });

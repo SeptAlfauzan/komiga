@@ -10,9 +10,11 @@ POST http://localhost:3000/api/genres
 Content-Type: application/json
 
 {
-    "name": "testing only"
+    "name": "Gunung Meletus"
 }
-
+###
+DELETE http://localhost:3000/api/episodes/f5cd7d5c-0257-42e5-9246-225610ce77c8
+Content-Type: application/json
 ###
 POST http://localhost:3000/api/auth 
 Content-Type: application/json
@@ -69,5 +71,5 @@ POST http://localhost:3000/api/comics/fc6f1f7c-0b3a-44c7-8119-4320794968b3
 Content-Type: application/json
 
 {
-    "comicId": "fc6f1f7c-0b3a-44c7-8119-4320794968b3"
+    "comicId": "2f9cb0f0-8c14-4edb-8589-356642ac06c9"
 }

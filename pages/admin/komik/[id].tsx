@@ -31,9 +31,19 @@ interface EpisodeWithOrder extends Episode {
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const comic: ComicData | null = await prisma.comic.findFirst({
-    where: { id: context.params!.id!.toString() },
-    include: { episodes: true, genre: true },
+  // const comic: ComicData | null = await prisma.comic.findFirst({
+  //   where: { id: context.params!.id!.toString() },
+  //   include: { episodes: true, genre: true },
+  // });
+  const comic: Episode[] | null = await prisma.episode.findMany({
+    where: {
+      comicId: context.params!.id!.toString(),
+      // NOT: { created: "1000-10-10T00:00:00.000Z" },
+    },
+    include: { comic: true },
+    orderBy: {
+      created: "asc",
+    },
   });
 
   return {
@@ -47,17 +57,17 @@ function ComicEpisode({
   comic,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const modal = React.useRef<ModalHandle | null>(null);
-  const [data, setData] = React.useState<Episode[] | []>(comic?.episodes || []);
+  const [data, setData] = React.useState<Episode[] | []>(comic || []);
   const router = useRouter();
   if (!comic) router.back();
-
+  console.log(comic);
   React.useEffect(() => {
     const refecth = async () => {
       try {
-        const response: ComicData = await (
+        const response: Episode[] = await (
           await axios.get(`/api/comics/${router.query.id}`)
         ).data;
-        const dataWithNumber = response.episodes.map(
+        const dataWithNumber = response.map(
           (episode: EpisodeWithOrder, i: number) => {
             episode.order = i + 1;
             return episode;
@@ -69,13 +79,13 @@ function ComicEpisode({
       }
     };
     refecth();
-  }, [comic?.episodes, router.query.id]);
+  }, [comic, router.query.id]);
 
   return (
     <DashboardLayout>
       <div className="w-full h-fit flex flex-wrap gap-10">
         <Table
-          title={comic!.name.toString()}
+          title={"comic!.name.toString()"}
           data={data}
           columns={columns}
           pagination
@@ -91,11 +101,11 @@ function ComicEpisode({
         />
       </div>
       <Modal ref={modal}>
-        <FormNewComic
+        {/* <FormNewComic
           comic={comic}
           onCancel={() => modal.current?.toggle()}
           refresh={() => router.replace(router.asPath)}
-        />
+        /> */}
       </Modal>
     </DashboardLayout>
   );

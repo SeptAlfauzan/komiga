@@ -28,6 +28,7 @@ model User{
 model Genre{
   id String @id @default(uuid())
   name String @unique
+  isDeleted Boolean @default(false)
   comics Comic[] 
 }
 
@@ -47,6 +48,8 @@ model Episode{
   comic Comic @relation(fields: [comicId], references: [id]) 
   comicId String 
   panels Panel[]
+  deleted String @default("")
+  quizizLink String @default("")
 }
 
 model Panel{

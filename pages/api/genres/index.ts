@@ -14,7 +14,7 @@ export default async function handler(
     case "DELETE":
       break;
     default:
-      const genres = await prisma.genre.findMany();
+      const genres = await prisma.genre.findMany({});
 
       return res.status(200).json(genres);
       break;

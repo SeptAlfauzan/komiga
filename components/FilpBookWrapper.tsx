@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { ReactNode } from "react";
 import HTMLFlipBook from "react-pageflip";
 
@@ -40,14 +41,7 @@ const FlipBookWrapper: React.FC<Props> = ({ imagesUrl, children }) => {
     >
       {imagesUrl.map((url, i) => (
         <div key={i} className=" border bg-slate-300 relative overflow-clip">
-          <img
-            src={url}
-            // height="100%"
-            // width="100%"
-            // layout="fill"
-            // objectFit="contain"
-            alt="_"
-          />
+          <Image src={url} layout="fill" objectFit="contain" alt="_" />
         </div>
       ))}
       <div className="demoPage border bg-white">{children}</div>

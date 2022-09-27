@@ -11,6 +11,7 @@ const imagekit = new ImageKit({
   privateKey: process.env.privateKey!,
   urlEndpoint: process.env.NEXT_PUBLIC_urlEndpoint!,
 });
+
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
