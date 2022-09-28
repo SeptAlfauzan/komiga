@@ -47,11 +47,11 @@ const SideBar: React.FC = () => {
         <SideBarLink name="dashboard" active={active} href="/admin/dashboard" />
         <SideBarLink name="komik" active={active} href="/admin/komik" />
         <SideBarLink name="genre" active={active} href="/admin/genre" />
-        <li
+        {/* <li
           className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
         >
           Admin
-        </li>
+        </li> */}
         <li
           className={`hover:bg-gradient-to-br from-yellow-300 to-pink-500 py-1 px-4 rounded-full hover:text-white text-black bg-white duration-250 transition-all cursor-pointer`}
           onClick={logout}
