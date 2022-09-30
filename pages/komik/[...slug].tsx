@@ -29,7 +29,10 @@ export const getServerSideProps = async (
   const [comicId, episodeId] = Array.from(context.query.slug);
 
   const episodes: Episode[] = await prisma.episode.findMany({
-    where: { comicId: comicId?.toString() },
+    where: {
+      comicId: comicId?.toString(),
+      NOT: { created: "1000-10-10T00:00:00.000Z" },
+    },
     orderBy: { created: "asc" },
   });
   const selectedEpisodes: EpisodeWithPanels | null =
@@ -63,6 +66,7 @@ function KomikId({
     JSON.parse(selectedEpisodes)
   );
 
+  console.log(listEpisodes);
   const currentEpisodeIndex = listEpisodes
     .map((ep) => ep.id)
     .indexOf(episodeId);
