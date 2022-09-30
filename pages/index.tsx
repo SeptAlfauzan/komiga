@@ -92,7 +92,13 @@ function Home({
         <div className="flex w-full flex-wrap gap-[2.5%] relative">
           {items.map((data: ComicWithGenre | undefined, i: number) => {
             if (data !== undefined)
-              return <CardThumbnail url={`/komik/${data?.id}`} key={i} />;
+              return (
+                <CardThumbnail
+                  url={`/komik/${data?.id}`}
+                  imageSrc={data.bannerImage}
+                  key={i}
+                />
+              );
           })}
           {items.length === 1 && items[0] === undefined ? (
             <p className="text-xl text-zinc-700">

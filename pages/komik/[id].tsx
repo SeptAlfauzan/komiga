@@ -21,10 +21,21 @@ interface ComicData extends Comic {
 interface EpisodeWithOrder extends Episode {
   order?: number;
 }
+
+interface ComicData extends Episode {
+  comic: Comic;
+}
+
 export const getServerSideProps = async (context: GetStaticPropsContext) => {
-  const comic: ComicData | null = await prisma.comic.findFirst({
-    where: { id: context.params!.id!.toString() },
-    include: { episodes: true, genre: true },
+  const comic = await prisma.episode.findMany({
+    where: {
+      comicId: context.params!.id!.toString(),
+      NOT: { created: "1000-10-10T00:00:00.000Z" },
+    },
+    include: { comic: true },
+    orderBy: {
+      created: "asc",
+    },
   });
 
   return {
@@ -37,7 +48,7 @@ export const getServerSideProps = async (context: GetStaticPropsContext) => {
 function KomikId({
   comic,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const data: ComicData = comic;
+  const data: (Episode & { comic: Comic })[] = comic;
 
   return (
     <MainLayout>
@@ -48,18 +59,18 @@ function KomikId({
       >
         <div className="w-full h-[60vh]  bg-gradient-to-br from-blue-500 to-pink-700 relative">
           <Image
-            src={data.bannerImage || ""}
-            alt={`${data.name}-banner-image`}
+            src={data[0].comic.bannerImage || ""}
+            alt={`${data[0].comic.name}-banner-image`}
             objectFit="cover"
             layout="fill"
           />
           <div className="absolute text-white top-28 text-center w-full ">
-            <h3 className="text-5xl">{data.name}</h3>
-            <p>{data.description}</p>
+            <h3 className="text-5xl">{data[0].comic.name}</h3>
+            <p>{data[0].comic.description}</p>
           </div>
         </div>
         <div className="flex flex-col gap-4 w-3/4 rounded min-h-[80vh] bg-white -mt-[100px] py-10 px-10 z-10">
-          {data.episodes.map((data, i) => (
+          {data.map((data, i) => (
             <Link key={i} href={`/komik/${data.comicId}/${data.id}`}>
               <div className="flex px-2 justify-between rounded border-b-2 text-lg cursor-pointer hover:bg-blue-50 text-zinc-600">
                 <p>Episode {i + 1}</p>

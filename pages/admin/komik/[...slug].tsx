@@ -41,7 +41,7 @@ function PanelComicEpisode({
     { episodeId: string; image: File }[]
   >([]);
   const [comicId, episodeId] = Array.from(router.query.slug!);
-  console.log(comicId, episodeId);
+
   const [data] = useRefetch(
     panels,
     `/api/panels/${comicId}?episodeId=${episodeId}`
@@ -72,7 +72,7 @@ function PanelComicEpisode({
         body,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-      console.log(response.data);
+
       const { url, fileId } = response.data;
       const newPanel = await axios.post("/api/panels", {
         id: fileId,
@@ -102,7 +102,6 @@ function PanelComicEpisode({
         ).data
       );
     };
-    console.log(sortedData);
   }, [data]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -111,7 +110,6 @@ function PanelComicEpisode({
     // const newData: Panel[] = files;
     try {
       const panels = await axios.post("/api/panels", files);
-      console.log(panels);
     } catch (error) {
       console.log(error);
     }
@@ -119,9 +117,12 @@ function PanelComicEpisode({
 
   const deletePanel = async (id: string) => {
     try {
-      const response = await axios.delete(`/api/panels?id=${id}`);
+      const imageId = id;
+      const response = await axios.delete(
+        `/api/panels?id=${id}&imageId=${imageId}`
+      );
       router.replace(router.asPath);
-      console.log(response);
+      console.log("hasil delete", response.data);
     } catch (error) {
       console.error(error);
     }

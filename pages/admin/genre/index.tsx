@@ -70,7 +70,7 @@ function GenreDashboard({
           }
         />
       </div>
-      <Modal ref={modal}>
+      <Modal title="Tambah Genre Komik" ref={modal}>
         <FormNewGenre
           onCancel={() => modal.current?.toggle()}
           refresh={() => router.replace(router.asPath)}

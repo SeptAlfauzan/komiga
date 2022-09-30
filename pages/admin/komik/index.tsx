@@ -69,7 +69,7 @@ function Comic({
           }
         />
       </div>
-      <Modal ref={modal}>
+      <Modal title="Tambah Komik Baru" ref={modal}>
         <FormNewComic
           genre={genres}
           onCancel={() => modal.current?.toggle()}

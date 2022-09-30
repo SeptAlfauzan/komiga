@@ -105,7 +105,7 @@ function ComicEpisode({
           }
         />
       </div>
-      <Modal ref={modal}>
+      <Modal title="Tambah Episode Komik" ref={modal}>
         <FormNewComic
           comic={comic}
           comicId={router.query.id?.toString()}

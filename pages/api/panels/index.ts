@@ -2,6 +2,7 @@ import { Panel } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../prisma/prisma";
 import ImageKit from "imagekit";
+import { imageKitDelete } from "../../../libs/imageKitDelete";
 
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_publicKey!,
@@ -30,16 +31,18 @@ export default async function handler(
       }
     case "DELETE":
       try {
-        const { id, episode } = req.query;
+        const { id, imageId } = req.query;
         // const updatedPanel = await prisma.episode.update({
         //   where: { id: episode!.toString() },
         //   data: { panels: { set: [] } },
         //   include: { panels: true },
         // });
+        const deletedImage = await imageKitDelete(imageId!.toString());
         const deleted = await prisma.panel.delete({
           where: { id: id!.toString() },
         });
-        return res.status(200).json(deleted);
+        // console.log("image id", imageId);
+        return res.status(200).json({ deleted, deletedImage });
       } catch (error) {
         return res.status(500).json(error);
       }
