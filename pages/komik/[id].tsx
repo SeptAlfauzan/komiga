@@ -11,6 +11,7 @@ import React from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import NavBar from "../../components/navbar";
 import { prisma } from "../../prisma/prisma";
+import { formatDate } from "../../utils/date";
 
 interface ComicData extends Comic {
   episodes: Episode[];
@@ -75,7 +76,7 @@ function KomikId({
               <div className="flex px-2 justify-between rounded border-b-2 text-lg cursor-pointer hover:bg-blue-50 text-zinc-600">
                 <p>Episode {i + 1}</p>
                 <div className="text-zinc-300 text-xs">
-                  {data.created.toString()}{" "}
+                  {formatDate(data.created.toString())}{" "}
                   <span className="text-black text-lg">#{i + 1}</span>
                 </div>
               </div>
