@@ -76,7 +76,7 @@ function KomikId({
               <div className="flex px-2 justify-between rounded border-b-2 text-lg cursor-pointer hover:bg-blue-50 text-zinc-600">
                 <p>Episode {i + 1}</p>
                 <div className="text-zinc-300 text-xs">
-                  {formatDate(data.created.toString())}{" "}
+                  {formatDate(data.created)}{" "}
                   <span className="text-black text-lg">#{i + 1}</span>
                 </div>
               </div>
